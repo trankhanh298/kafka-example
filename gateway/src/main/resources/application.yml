@@ -1,0 +1,42 @@
+server:
+  port: 8764
+spring:
+  application:
+    name: my-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user
+          predicates:
+            - Path=/user-service/**
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+    registerWithEureka: true
+    fetchRegistry: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: DEBUG
